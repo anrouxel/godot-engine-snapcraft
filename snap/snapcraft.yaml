@@ -66,13 +66,15 @@ parts:
       snapcraftctl pull
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
     override-build: |
-      scons p=linuxbsd tools=yes module_mono_enabled=yes mono_glue=no
-      bin/godot.linuxbsd.tools.64.mono --generate-mono-glue modules/mono/glue
+      scons p=x11 tools=yes module_mono_enabled=yes mono_glue=no
+      bin/godot.x11.tools.64.mono --generate-mono-glue modules/mono/glue
 
-      scons p=linuxbsd target=release_debug tools=yes module_mono_enabled=yes
-      scons p=linuxbsd target=release_debug tools=no module_mono_enabled=yes
-      scons p=linuxbsd target=release tools=no module_mono_enabled=yes
+      scons p=x11 target=release_debug tools=yes module_mono_enabled=yes
+      scons p=x11 target=release_debug tools=no module_mono_enabled=yes
+      scons p=x11 target=release tools=no module_mono_enabled=yes
       tree
+    build-snaps:
+      - dotnet-sdk/latest/stable
     build-packages:
       - tree
       - git
@@ -90,5 +92,6 @@ parts:
       - libudev-dev
       - libxi-dev
       - libxrandr-dev
+      - mono-complete
     stage-packages:
       - libgtk-3-0
