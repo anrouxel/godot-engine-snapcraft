@@ -37,7 +37,9 @@ parts:
       snapcraftctl set-version "$(git describe --tags | sed 's/v//' | sed "s/-g/%/"  | cut -d "%" -f1)"
     override-build: |
       scons -j$(nproc) platform=linuxbsd
+      tree
     build-packages:
+      - tree
       - git
       - sed
       - build-essential
