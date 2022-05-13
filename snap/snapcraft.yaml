@@ -58,7 +58,7 @@ parts:
     stage-packages:
       - libgtk-3-0
     
-    gd-godot-engine-mono-snapcraft:
+  gd-godot-engine-mono-snapcraft:
     plugin: nil
     source: https://github.com/godotengine/godot.git
     source-type: git
