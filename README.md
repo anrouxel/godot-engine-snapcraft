@@ -1,2 +1,1 @@
-# godot-engine-snapcraft
-Godot Engine
+# Godot Engine
