@@ -84,12 +84,12 @@ parts:
       - build-essential
       - pkg-config
       - libx11-dev
-      - libxcursor-dev \
+      - libxcursor-dev
       - libxinerama-dev
       - libgl1-mesa-dev
       - libglu-dev
       - libasound2-dev
-      - libpulse-dev \
+      - libpulse-dev
       - libdbus-1-dev
       - libudev-dev
       - libxi-dev
