@@ -68,7 +68,7 @@ parts:
     override-build: |
       # Python
       python3 -c "import sys; print(sys.version)"
-      python3 -m pip install scons
+      pip install scons
       scons --version
       
       # Mono
