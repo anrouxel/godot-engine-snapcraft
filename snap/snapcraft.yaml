@@ -66,7 +66,8 @@ parts:
       snapcraftctl pull
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
     override-build: |
-      scons -j$(nproc) p=x11 tools=yes module_mono_enabled=yes mono_glue=no
+      scons -j$(nproc) p=x11 tools=yes module_mono_enabled=yes mono_static=yes mono_glue=no
+      tree
       bin/godot.x11.tools.64.mono --generate-mono-glue modules/mono/glue
 
       scons -j$(nproc) p=x11 target=release_debug tools=yes module_mono_enabled=yes
