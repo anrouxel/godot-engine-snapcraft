@@ -70,7 +70,7 @@ parts:
       python3 --version
       pip3 --version
       python3 -c "import sys; print(sys.version)"
-      python3 -m pip3 install scons
+      pip3 install scons
       scons --version
       
       # Mono
