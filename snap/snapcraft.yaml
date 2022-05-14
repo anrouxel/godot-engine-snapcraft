@@ -99,6 +99,7 @@ parts:
       - wget
       - unzip
       - mono-complete
+      - python3
     stage-packages:
       - libgtk-3-0
 
