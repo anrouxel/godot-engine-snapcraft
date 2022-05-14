@@ -67,8 +67,10 @@ parts:
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
     override-build: |
       # Python
+      python3 --version
+      pip --version
       python3 -c "import sys; print(sys.version)"
-      pip install scons
+      python3 -m pip install scons
       scons --version
       
       # Mono
