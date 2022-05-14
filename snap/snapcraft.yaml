@@ -67,9 +67,12 @@ parts:
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
     override-build: |
       # Python
-      python -c "import sys; print(sys.version)"
-      python -m pip install scons
+      python3 -c "import sys; print(sys.version)"
+      python3 -m pip install scons
       scons --version
+      
+      # Mono
+      mono --version
       
       # Scons
       scons -j$(nproc) p=linuxbsd target=release_debug tools=true tests=false module_mono_enabled=yes mono_static=yes mono_glue=no
