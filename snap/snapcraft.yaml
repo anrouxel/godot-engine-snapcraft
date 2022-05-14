@@ -66,10 +66,10 @@ parts:
       snapcraftctl pull
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
     override-build: |
-      scons p=linuxbsd target=release_debug tools=true tests=false -j$(nproc) verbose=yes warnings=all werror=yes module_mono_enabled=yes mono_static=yes mono_glue=no
+      scons p=linuxbsd target=release_debug tools=true tests=false -j$(nproc) module_mono_enabled=yes mono_static=yes mono_glue=no
       tree bin/
       ./bin/godot.x11.opt.tools.64.mono --generate-mono-glue modules/mono/glue || true
-      scons p=linuxbsd target=release_debug tools=true tests=false -j$(nproc) verbose=yes warnings=all werror=yes module_mono_enabled=yes mono_static=yes mono_glue=no mono_glue=yes
+      scons p=linuxbsd target=release_debug tools=true tests=false -j$(nproc) module_mono_enabled=yes mono_static=yes mono_glue=no mono_glue=yes
       tree bin/
     build-snaps:
       - dotnet-sdk/latest/stable
@@ -100,3 +100,31 @@ parts:
       - mono-complete
     stage-packages:
       - libgtk-3-0
+  
+  mono:
+    plugin: nil
+    source: https://github.com/mono/mono.git
+    source-type: git
+    override-pull: |
+      snapcraftctl pull
+      git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
+    override-build: |
+      PREFIX="output"
+      mkdir $PREFIX
+      PATH=$PREFIX/bin:$PATH
+      cd mono
+      ./autogen.sh --prefix=$PREFIX
+      make
+      make install
+    build-packages:
+      - tree
+      - git
+      - sed
+      - autoconf
+      - libtool-bin
+      - automake
+      - build-essential
+      - gettext
+      - cmake
+      - python3
+      - curl
