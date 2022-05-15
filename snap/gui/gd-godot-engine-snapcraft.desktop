@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Exec=gd-godot-engine-snapcraft
+Icon=${SNAP}/meta/gui/icon.png
+Categories=Development;
+Name=Godot Engine
+Comment=Godot Engine ${SNAPCRAFT_PROJECT_VERSION}
