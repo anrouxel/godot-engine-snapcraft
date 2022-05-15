@@ -17,14 +17,18 @@ apps:
     extensions: [gnome-3-38]
     command: godot-engine/godot-engine
     plugs:
-      - gsettings
-      - opengl
-      - home
       - desktop
       - desktop-legacy
-      - wayland
+      - home
+      - opengl
       - x11
       - unity7
+      - wayland
+      - browser-support
+      - network
+      - gsettings
+      - pulseaudio
+      - audio-playback
 
 parts:
   gd-godot-engine-snapcraft:
