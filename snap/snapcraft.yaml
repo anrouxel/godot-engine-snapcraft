@@ -1,0 +1,156 @@
+name: gd-godot-engine-snapcraft
+license: GPL-3.0
+summary: Godot Engine
+description: |
+  Godot Engine
+base: core20
+grade: stable
+confinement: strict
+
+adopt-info: gd-godot-engine-snapcraft
+
+architectures:
+  - build-on: amd64
+
+apps:
+  gd-godot-engine-snapcraft:
+    extensions: [gnome-3-38]
+    command: godot-engine/godot-engine
+    plugs:
+      - gsettings
+      - opengl
+      - home
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - unity7
+      
+  gd-godot-engine-mono-snapcraft:
+    extensions: [gnome-3-38]
+    command: godot-engine-mono/godot-engine-mono
+    plugs:
+      - gsettings
+      - opengl
+      - home
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - unity7
+
+parts:
+  gd-godot-engine-snapcraft:
+    plugin: nil
+    source: https://github.com/godotengine/godot.git
+    source-type: git
+    override-pull: |
+      snapcraftctl pull
+      git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
+      snapcraftctl set-version "$(git describe --tags | sed 's/v//' | sed "s/-g/%/"  | cut -d "%" -f1)"
+    override-build: |
+      # Python
+      python3 -c "import sys; print(sys.version)"
+      pip3 install scons
+      
+      # Version
+      python3 --version
+      pip3 --version
+      scons --version
+      
+      # Scons
+      scons -j$(nproc) platform=linuxbsd
+      
+      cd bin
+      mv godot.x11.tools.64 godot-engine
+      mkdir $SNAPCRAFT_PART_INSTALL/godot-engine
+      mv godot-engine $SNAPCRAFT_PART_INSTALL/godot-engine
+    build-packages:
+      - git
+      - sed
+      - build-essential
+      - pkg-config
+      - libx11-dev
+      - libxcursor-dev
+      - libxinerama-dev
+      - libgl1-mesa-dev
+      - libglu-dev
+      - libasound2-dev
+      - libpulse-dev
+      - libdbus-1-dev
+      - libudev-dev
+      - libxi-dev
+      - libxrandr-dev
+      - yasm
+      - xvfb
+      - wget
+      - unzip
+      - python3
+      - python3-pip
+    stage-packages:
+      - libgtk-3-0
+    
+  gd-godot-engine-mono-snapcraft:
+    plugin: nil
+    source: https://github.com/godotengine/godot.git
+    source-type: git
+    override-pull: |
+      snapcraftctl pull
+      git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
+    override-build: |
+      # Python
+      python3 -c "import sys; print(sys.version)"
+      pip3 install scons
+      
+      # Version
+      python3 --version
+      pip3 --version
+      scons --version
+      mono --version
+      
+      # Scons
+      scons -j$(nproc) p=linuxbsd target=release_debug tools=true tests=false module_mono_enabled=yes mono_static=yes mono_glue=no
+      xvfb-run ./bin/godot.x11.opt.tools.64.mono --generate-mono-glue modules/mono/glue || true
+      scons -j$(nproc) p=linuxbsd target=release_debug tools=true tests=false module_mono_enabled=yes mono_static=yes mono_glue=yes
+      
+      cd bin
+      mv godot.x11.opt.tools.64.mono godot-engine-mono
+      mkdir $SNAPCRAFT_PART_INSTALL/godot-engine-mono
+      mv * $SNAPCRAFT_PART_INSTALL/godot-engine-mono
+    build-snaps:
+      - dotnet-sdk/latest/stable
+    stage-snaps:
+      - dotnet-sdk/latest/stable
+    build-packages:
+      - git
+      - sed
+      - build-essential
+      - pkg-config
+      - libx11-dev
+      - libxcursor-dev
+      - libxinerama-dev
+      - libgl1-mesa-dev
+      - libglu-dev
+      - libasound2-dev
+      - libpulse-dev
+      - libdbus-1-dev
+      - libudev-dev
+      - libxi-dev
+      - libxrandr-dev
+      - yasm
+      - xvfb
+      - wget
+      - unzip
+      - mono-complete
+      - python3
+      - python3-pip
+    stage-packages:
+      - libgtk-3-0
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [stable-bionic]
+    key-id: 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+    key-server: hkp://keyserver.ubuntu.com:80
+    url: https://download.mono-project.com/repo/ubuntu
