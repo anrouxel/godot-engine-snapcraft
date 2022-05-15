@@ -80,3 +80,4 @@ parts:
       - python3-pip
     stage-packages:
       - libgtk-3-0
+      - libasound2
