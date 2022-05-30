@@ -15,7 +15,7 @@ architectures:
 apps:
   gd-godot-engine-snapcraft:
     extensions: [gnome-3-38]
-    command: desktop-launch "$SNAP/godot-engine/godot-engine"
+    command: godot-engine/godot-engine
     plugs:
       - desktop
       - desktop-legacy
@@ -29,12 +29,9 @@ apps:
       - gsettings
       - pulseaudio
       - audio-playback
-      - audio-record
 
 parts:
   gd-godot-engine-snapcraft:
-    after:
-      - desktop-glib-only
     plugin: nil
     source: https://github.com/godotengine/godot.git
     source-type: git
@@ -81,14 +78,3 @@ parts:
       - unzip
       - python3
       - python3-pip
-    stage-packages:
-      - libglu1-mesa
-      
-  desktop-glib-only:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
-    plugin: make
-    build-packages:
-      - libglib2.0-dev
-    stage-packages:
-      - libglib2.0-bin
