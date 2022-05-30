@@ -15,7 +15,7 @@ architectures:
 apps:
   gd-godot-engine-snapcraft:
     extensions: [gnome-3-38]
-    command: desktop-launch godot-engine/godot-engine
+    command: desktop-launch "$SNAP/godot-engine/godot-engine"
     plugs:
       - desktop
       - desktop-legacy
