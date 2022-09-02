@@ -3,7 +3,7 @@ license: MIT
 summary: Godot Engine
 description: |
   Godot Engine
-base: core20
+base: core22
 grade: stable
 confinement: strict
 
@@ -11,10 +11,11 @@ adopt-info: gd-godot-engine-snapcraft
 
 architectures:
   - build-on: amd64
+    build-for: amd64
 
 apps:
   gd-godot-engine-snapcraft:
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     command: godot-engine/godot-engine
     plugs:
       - desktop
@@ -36,9 +37,9 @@ parts:
     source: https://github.com/godotengine/godot.git
     source-type: git
     override-pull: |
-      snapcraftctl pull
+      craftctl default
       git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
-      snapcraftctl set-version "$(git describe --tags | sed 's/v//' | sed "s/-g/%/"  | cut -d "%" -f1)"
+      craftctl set version="$(git describe --tags `git rev-list --tags --max-count=1`)"
     override-build: |
       # Python
       python3 -c "import sys; print(sys.version)"
@@ -54,8 +55,8 @@ parts:
       
       cd bin
       mv godot.x11.tools.64 godot-engine
-      mkdir $SNAPCRAFT_PART_INSTALL/godot-engine
-      mv godot-engine $SNAPCRAFT_PART_INSTALL/godot-engine
+      mkdir $CRAFT_PART_INSTALL/godot-engine
+      mv godot-engine $CRAFT_PART_INSTALL/godot-engine
     build-packages:
       - git
       - sed
@@ -78,3 +79,4 @@ parts:
       - unzip
       - python3
       - python3-pip
+      - scons
