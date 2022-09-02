@@ -79,3 +79,4 @@ parts:
       - unzip
       - python3
       - python3-pip
+      - scons
