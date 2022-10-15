@@ -20,16 +20,18 @@ apps:
     plugs:
       - desktop
       - desktop-legacy
-      - home
-      - opengl
+      - wayland
       - x11
       - unity7
-      - wayland
+      - home
+      - opengl
       - browser-support
       - network
       - gsettings
       - pulseaudio
       - audio-playback
+      - joystick
+      - removable-media
 
 parts:
   gd-godot-engine-snapcraft:
@@ -80,3 +82,7 @@ parts:
       - python3
       - python3-pip
       - scons
+    stage-packages:
+      - libpulse0
+      - libglu1-mesa
+      - libgl1
