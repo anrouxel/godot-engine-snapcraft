@@ -82,7 +82,7 @@ parts:
       - python3
       - python3-pip
       - scons
-    stage-packages
+    stage-packages:
       - libpulse0
       - libglu1-mesa
       - libgl1
