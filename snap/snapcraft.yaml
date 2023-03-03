@@ -54,7 +54,7 @@ parts:
       dotnet --info
       
       # Scons
-      scons -j1 platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
+      scons platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
       ls -l bin/
 
       # Generate C# glue
