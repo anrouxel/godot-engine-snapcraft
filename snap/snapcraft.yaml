@@ -45,24 +45,36 @@ parts:
     override-build: |
       # Python
       python3 -c "import sys; print(sys.version)"
-      pip3 install scons
+      python3 -m pip install scons
       
       # Version
       python3 --version
       pip3 --version
       scons --version
+      dotnet --info
       
       # Scons
-      scons -j$(nproc) platform=linuxbsd
-      
+      scons -j$(nproc) platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
+      ls -l bin/
+
+      # Generate C# glue
+      ./bin/godot.* --headless --generate-mono-glue ./modules/mono/glue || true
+
+      # Build .NET Solution
+      ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
+
+      # Generate package
+      strip bin/godot.*
+      chmod +x bin/godot.*
       cd bin
-      mv godot.x11.tools.64 godot-engine
+      mv godot.* godot-engine
       mkdir $CRAFT_PART_INSTALL/godot-engine
       mv godot-engine $CRAFT_PART_INSTALL/godot-engine
     build-packages:
       - git
       - sed
       - build-essential
+      - scons
       - pkg-config
       - libx11-dev
       - libxcursor-dev
@@ -71,18 +83,11 @@ parts:
       - libglu-dev
       - libasound2-dev
       - libpulse-dev
-      - libdbus-1-dev
       - libudev-dev
       - libxi-dev
       - libxrandr-dev
-      - yasm
-      - xvfb
-      - wget
-      - unzip
       - python3
       - python3-pip
-      - scons
+      - dotnet6
     stage-packages:
-      - libpulse0
-      - libglu1-mesa
-      - libgl1
+      - dotnet6
