@@ -53,16 +53,28 @@ parts:
       scons --version
       dotnet --info
       
+      # Resource
+      df -h
+
       # Scons
       scons platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
       ls -l bin/
 
+      # Resource
+      df -h
+
       # Generate C# glue
       ./bin/godot.* --headless --generate-mono-glue ./modules/mono/glue || true
+
+      # Resource
+      df -h
 
       # Build .NET Solution
       ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
 
+      # Resource
+      df -h
+      
       # Generate package
       strip bin/godot.*
       chmod +x bin/godot.*
