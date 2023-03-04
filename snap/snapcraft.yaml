@@ -54,7 +54,7 @@ parts:
       dotnet --info
       
       # Scons
-      scons -j$(nproc) platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
+      scons platform=linuxbsd target=editor tests=false verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes module_mono_enabled=yes
       ls -l bin/
 
       # Generate C# glue
@@ -69,7 +69,7 @@ parts:
       cd bin
       mv godot.* godot-engine
       mkdir $CRAFT_PART_INSTALL/godot-engine
-      mv godot-engine $CRAFT_PART_INSTALL/godot-engine
+      mv * $CRAFT_PART_INSTALL/godot-engine
     build-packages:
       - git
       - sed
