@@ -90,4 +90,4 @@ parts:
       - dotnet6
     stage-packages:
       - dotnet6
-      - libspeechd
+      - libspeechd2
