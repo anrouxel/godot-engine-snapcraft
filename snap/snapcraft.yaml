@@ -113,5 +113,4 @@ parts:
       - mesa-utils-extra
       - libvulkan1
       - mesa-vulkan-drivers
-      - vulkan-utils
       - vulkan-tools
