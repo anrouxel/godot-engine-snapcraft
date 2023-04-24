@@ -26,12 +26,13 @@ apps:
       - home
       - opengl
       - browser-support
-      - network
       - gsettings
       - pulseaudio
       - audio-playback
       - joystick
       - removable-media
+      - network
+      - network-bind
 
 parts:
   gd-godot-engine-snapcraft:
@@ -91,3 +92,26 @@ parts:
     stage-packages:
       - dotnet6
       - libspeechd2
+      - libpulse0
+      - libasound2
+      - libnss3
+      - libxss1
+      - libxtst6
+      - libnspr4
+      - libimlib2
+      - libx11-6
+      - libxcursor1
+      - libfreetype6
+      - libgl1
+      - libegl1-mesa
+      - libglvnd0
+      - libglu1
+      - libglu1-mesa
+      - freeglut3
+      - mesa-vdpau-drivers
+      - mesa-utils
+      - mesa-utils-extra
+      - libvulkan1
+      - mesa-vulkan-drivers
+      - vulkan-utils
+      - vulkan-tools
