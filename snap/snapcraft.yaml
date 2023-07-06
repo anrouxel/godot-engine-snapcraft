@@ -214,4 +214,6 @@ parts:
       - vdpauinfo
       - vulkan-tools
     organize:
-      godot-engine-wrapper: bin/
+      godot-engine-wrapper: bin/godot-engine-wrapper
+    stage:
+      - bin/godot-engine-wrapper
