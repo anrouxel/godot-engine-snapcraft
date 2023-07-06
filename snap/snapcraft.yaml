@@ -13,26 +13,68 @@ architectures:
   - build-on: amd64
     build-for: amd64
 
+layout:
+  /usr/share/vulkan:
+    symlink: $SNAP/usr/share/vulkan
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvulkan_intel.so:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvulkan_intel.so
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvulkan_radeon.so:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvulkan_radeon.so
+  /usr/share/libdrm:
+    bind: $SNAP/usr/share/libdrm
+  /usr/share/alsa:
+    symlink: $SNAP/usr/share/alsa
+  /usr/share/libdrm/amdgpu.ids:
+    symlink: $SNAP/usr/share/libdrm/amdgpu.ids
+  /usr/local/lib:
+    symlink: $SNAP/usr/local/lib
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+
 apps:
   gd-godot-engine-snapcraft:
     extensions: [gnome]
     command: godot-engine/godot-engine
-    plugs:
-      - desktop
-      - desktop-legacy
-      - wayland
-      - x11
-      - unity7
-      - home
-      - opengl
-      - browser-support
-      - gsettings
-      - pulseaudio
-      - audio-playback
-      - joystick
-      - removable-media
+    command-chain:
+      - bin/godot-engine-wrapper
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-gl:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/xorg
+      PIPEWIRE_CONFIG_NAME: $SNAP/usr/share/pipewire/pipewire.conf
+      PIPEWIRE_MODULE_DIR: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pipewire-0.3
+    plugs: &plugs
       - network
       - network-bind
+      - x11
+      - opengl
+      - home
+      - alsa
+      - pulseaudio
+      - audio-record
+      - audio-playback
+      - jack1
+      - bluez
+      - joystick
+      - raw-usb
+      - removable-media
+      - wayland
+      - unity7
+      - desktop
+      - desktop-legacy
+      - screen-inhibit-control
+      - browser-support
+      - hardware-observe
+      - mount-observe
+      - gsettings
+      - system-observe
+      - process-control
+      - kernel-module-observe
+  vulkaninfo:
+    command: usr/bin/vulkaninfo
+    command-chain:
+      - bin/godot-engine-wrapper
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+    plugs: *plugs
 
 parts:
   gd-godot-engine-snapcraft:
@@ -89,28 +131,88 @@ parts:
       - python3
       - python3-pip
       - dotnet6
+      - libass-dev
+      - libavcodec-dev
+      - libavdevice-dev
+      - libavformat-dev
+      - libdrm-dev
+      - libegl1-mesa-dev
+      - libfreetype6-dev 
+      - libgbm-dev
+      - libjack-jackd2-dev
+      - libswscale-dev
+      - libusb-1.0-0-dev
+      - libx11-xcb-dev
+      - libxml2-dev
+      - libxv-dev
+      - mesa-common-dev
+      - xserver-xorg-input-all
+      - zlib1g-dev
+      - libvulkan-dev
+      - libxxf86vm-dev
+      - libdbus-1-dev
     stage-packages:
       - dotnet6
-      - libspeechd2
-      - libpulse0
-      - libasound2
-      - libnss3
-      - libxss1
-      - libxtst6
-      - libnspr4
-      - libimlib2
-      - libx11-6
-      - libxcursor1
-      - libfreetype6
-      - libgl1
-      - libegl1-mesa
-      - libglvnd0
-      - libglu1
-      - libglu1-mesa
-      - freeglut3
-      - mesa-vdpau-drivers
+     - libnotify-bin
+     - fonts-dejavu-core
+     - freeglut3-dev
+     - libasound2
+     - libavcodec58
+     - libavformat58
+     - libavutil56
+     - libdrm2
+     - libegl1-mesa
+     - libfreetype6
+     - libgbm1
+     - libgl1-mesa-dri
+     - libgl1-mesa-glx
+     - libgles2-mesa
+     - libjack-jackd2-0
+     - libminizip1
+     - libopenal1
+     - libpulse0
+     - libswresample3
+     - libswscale5
+     - libudev1
+     - libusb-1.0-0
+     - libwayland-client0
+     - libwayland-egl1-mesa
+     - libx11-6
+     - libx11-dev
+     - libxrandr-dev
+     - libxext6
+     - libxinerama1
+     - libxkbcommon0
+     - libxv1
+     - libxxf86vm1
+     - zlib1g
+     - libstdc++6
+     - libgcc1
+     - liblzma5
+     - libbz2-1.0
+     - libpcre3
+     - libsystemd0
+     - libvulkan1
+     - libvulkan-dev
+     - mesa-vulkan-drivers
+     - libass9
+     - libfribidi0
+     - libsdl1.2debian
+     - libsdl-net1.2
+     - libbluetooth3
+     - libxi6
+     - libaio
+
+  godot-engine-wrapper:
+    plugin: dump
+    after:
+      - gd-godot-engine-snapcraft
+    source: snap/local/
+    stage-packages:
       - mesa-utils
       - mesa-utils-extra
-      - libvulkan1
-      - mesa-vulkan-drivers
+      - vainfo
+      - vdpauinfo
       - vulkan-tools
+    organize:
+      godot-engine-wrapper: bin/
