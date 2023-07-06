@@ -36,7 +36,7 @@ apps:
     environment:
       HOME: $SNAP_USER_COMMON
       VK_ICD_FILENAMESr: /var/lib/snapd/lib/vulkan/icd.d/nvidia_icd.json:$SNAP/usr/share/vulkan/icd.d/radeon_icd.x86_64.json:$SNAP/usr/share/vulkan/icd.d/intel_icd.x86_64.json
-    plugs: &plugs
+    plugs:
       - home
       - network
       - audio-playback
@@ -44,13 +44,6 @@ apps:
       - removable-media
       - joystick
       - hardware-observe
-  vulkaninfo:
-    command: usr/bin/vulkaninfo
-    command-chain:
-      - bin/godot-engine-wrapper
-    environment:
-      SNAP_DESKTOP_RUNTIME: $SNAP
-    plugs: *plugs
 
 parts:
   gd-godot-engine-snapcraft:
@@ -114,6 +107,5 @@ parts:
       - mesa-va-drivers
       - mesa-vulkan-drivers
       - vulkan-tools
-      - libgl1-mesa
       - libegl1-mesa
       - libvulkan1
