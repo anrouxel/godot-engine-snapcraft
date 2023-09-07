@@ -23,7 +23,9 @@ jobs:
             curl -sL https://api.github.com/repos/godotengine/godot/releases | 
             jq .  | grep tag_name | grep -v beta | head -n 1 | cut -d'"' -f4
           )
-          sed -i 's/^\(version: \).*$/\1'"$VERSION"'/' snap/snapcraft.yaml
+          if [ $(echo $VERSION | cut -d'-' -f1) != $(grep version snap/snapcraft.yaml | cut -d' ' -f2) ]; then
+            sed -i 's/^\(version: \).*$/\1'"$VERSION"'/' snap/snapcraft.yaml
+          fi
       - name: Check for modified files
         id: git-check
         run: |
