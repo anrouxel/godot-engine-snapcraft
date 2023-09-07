@@ -1,0 +1,43 @@
+name: 📦 Publish to stable
+
+on:
+  # Allow the workflow to be started manually from the Actions tab.
+  workflow_dispatch:
+  # Allow the workflow to be started by another workflow.
+  workflow_call:
+    secrets:
+      STORE_LOGIN:
+        required: true
+
+# Permissions for GITHUB_TOKEN
+permissions:
+  contents: read
+  issues: write
+
+env:
+  # Use the name of the repo as the name of the snap
+  SNAP_NAME: ${{ github.event.repository.name }}
+  # Hardcoded git branch and Snap Store channel channel
+  CHANNEL: 'main'
+
+jobs:
+  build:
+    name: "Build and publish snap"
+    environment: "Stable Branch"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ env.CHANNEL }}
+    - uses: snapcore/action-build@v1
+      id: build
+    - uses: diddlesnaps/snapcraft-review-action@v1
+      with:
+        snap: ${{ steps.build.outputs.snap }}
+        isClassic: 'false'
+    - uses: snapcore/action-publish@v1
+      env:
+        SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+      with:
+        snap: ${{ steps.build.outputs.snap }}
+        release: candidate
