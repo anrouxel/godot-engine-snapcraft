@@ -6,8 +6,8 @@ description: |
 base: core22
 grade: stable
 confinement: strict
-
 adopt-info: gd-godot-engine-snapcraft
+version: v4.1-stable
 
 architectures:
   - build-on: amd64
@@ -52,8 +52,7 @@ parts:
     source-type: git
     override-pull: |
       craftctl default
-      git checkout "$(git describe --tags `git rev-list --tags --max-count=1`)" -b latest
-      craftctl set version="$(git describe --tags `git rev-list --tags --max-count=1`)"
+      git checkout "$SNAPCRAFT_PROJECT_VERSION" -b latest
     override-build: |
       # Python
       python3 -c "import sys; print(sys.version)"
