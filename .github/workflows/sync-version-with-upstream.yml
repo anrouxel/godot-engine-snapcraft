@@ -1,0 +1,53 @@
+name: 🔄 Sync version with upstream
+
+on:
+  # Runs at 10:00 UTC every day
+  schedule:
+    - cron:  '0 10 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  sync-version:
+    name: "Update snapcraft.yaml"
+    environment: "Stable Branch"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch release version
+        run: |
+          VERSION=$(
+            curl -sL https://api.github.com/repos/godotengine/godot/releases | 
+            jq .  | grep tag_name | grep -v beta | head -n 1 | cut -d'"' -f4
+          )
+          if [ $(echo $VERSION | cut -d'-' -f1) != $(grep version snap/snapcraft.yaml | cut -d' ' -f2) ]; then
+            sed -i 's/^\(version: \).*$/\1'"$VERSION"'/' snap/snapcraft.yaml
+          fi
+      - name: Check for modified files
+        id: git-check
+        run: |
+          MODIFIED=$([ -z "`git status --porcelain`" ] && echo "false" || echo "true")
+          echo "modified=$MODIFIED" >> $GITHUB_OUTPUT
+      - name: Commit latest release version
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name ${{ secrets.BOT_USERNAME }}
+          git config --global user.email ${{ secrets.BOT_EMAIL }}
+          git commit -am "Automatic sync to latest release"
+          git push
+    outputs:
+      modified: ${{ steps.git-check.outputs.modified }}
+  call-snap-store-publish-to-candidate:
+    name: "Call"
+    needs: sync-version
+    if: needs.sync-version.outputs.modified == 'true'
+    # Permissions needed by the called workflow
+    permissions:
+      contents: read
+      issues: write
+    secrets:
+      STORE_LOGIN: ${{ secrets.STORE_LOGIN }}
+    uses: ./.github/workflows/snap-store-publish-to-stable.yml
