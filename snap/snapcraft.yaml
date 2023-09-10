@@ -7,7 +7,7 @@ base: core22
 grade: stable
 confinement: strict
 adopt-info: gd-godot-engine-snapcraft
-version: v4.1-stable
+version: 4.1.1-stable
 
 architectures:
   - build-on: amd64
