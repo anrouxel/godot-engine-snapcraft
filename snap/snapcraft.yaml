@@ -99,9 +99,9 @@ parts:
       - libxrandr-dev
       - python3
       - python3-pip
-      - dotnet6
+      - dotnet8
     stage-packages:
-      - dotnet6
+      - dotnet8
       - libspeechd2
       - mesa-va-drivers
       - mesa-vulkan-drivers
